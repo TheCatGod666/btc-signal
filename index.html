@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>BTC Quick Signal</title>
+  <style>
+    body { font-family: Arial; text-align: center; margin-top: 80px; }
+    .action { font-size: 72px; font-weight: bold; }
+    .BUY { color: green; }
+    .SELL { color: red; }
+    .HOLD { color: gray; }
+    .info { font-size: 20px; margin-top: 30px; }
+  </style>
+</head>
+<body>
+  <h1>Bitcoin Quick Signal</h1>
+  <div id="signal" class="action HOLD">HOLD</div>
+  <div class="info">
+    Price: $<span id="price">-</span><br>
+    Updated: <span id="time">-</span>
+  </div>
+
+  <script>
+    async function fetchSignal() {
+      try {
+        const resp = await fetch('signal.json?t=' + Date.now());
+        const data = await resp.json();
+        const el = document.getElementById('signal');
+        el.textContent = data.action;
+        el.className = 'action ' + data.action;
+        document.getElementById('price').textContent = data.price;
+        document.getElementById('time').textContent = data.time;
+      } catch(e) { console.error(e); }
+    }
+    fetchSignal();
+    setInterval(fetchSignal, 1000);
+  </script>
+</body>
+</html>
